@@ -1,0 +1,5 @@
+- name: Install flask and gevent Modules for Python
+  pip:
+    name: 
+    - Flask==1.1.2
+    - gevent==20.9.0

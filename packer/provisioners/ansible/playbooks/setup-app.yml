@@ -1,0 +1,20 @@
+- hosts: localhost
+  name: install software needed for web app
+  become: yes
+  become_method: sudo
+  roles:
+    - installconfig
+
+- hosts: localhost
+  name: disable ipv6
+  become: yes
+  become_method: sudo
+  roles:
+    - disableipv6
+
+- hosts: localhost
+  name: setup systemd service for app
+  become: yes
+  become_method: sudo
+  roles:
+    - setupapp

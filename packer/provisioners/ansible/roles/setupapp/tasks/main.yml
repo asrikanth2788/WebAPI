@@ -1,0 +1,19 @@
+- name: copy systemd service config
+  copy:
+    src: /home/ubuntu/service.txt
+    dest: /etc/systemd/system/python.service
+
+- name: start systemd app service
+  systemd: 
+    name: python.service
+    state: started
+    no_block: yes
+    enabled: yes
+
+- include: tests.yml
+
+- name: stop systemd app service
+  systemd: 
+    name: python.service
+    state: stopped
+    no_block: yes

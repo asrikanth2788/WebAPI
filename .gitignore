@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*cache
+*manifest.json
+.terraform
+*.tfstate
+*.tfstate.backup
+*plugins

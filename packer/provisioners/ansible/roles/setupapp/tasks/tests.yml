@@ -1,0 +1,14 @@
+
+- name: get url
+  get_url:
+    url: http://localhost:8080/
+    dest: /tmp/index.html
+
+- name: read html
+  shell: cat /tmp/index.html
+  register: html_contents
+
+- name: check for string in html
+  when: html_contents.stdout.find("Hello World") != -1
+  debug: 
+    msg: "success!"

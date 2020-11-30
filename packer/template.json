@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `aws_access_key`}}",
+    "aws_secret_key": "{{env `aws_secret_key`}}",
+    "owner": ""
+  },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "ap-southeast-2",
+        "source_ami_filter": {
+            "filters": {
+                "virtualization-type": "hvm",
+                "name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server*",
+                "root-device-type": "ebs"
+            },
+            "owners": ["{{user `owner`}}","aws-marketplace"],
+            "most_recent": true
+        },
+        "instance_type": "t2.micro",
+        "ssh_username": "ubuntu",
+        "ami_name": "pythonapp-ami-packer",
+        "force_deregister": true
+    }],
+    "_comment": "Running Ansible roles on the image",
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "./packer/provisioners/scripts/bootstrap.sh"
+      },
+      {
+        "type": "file",
+        "source": "./App/",
+        "destination": "/home/ubuntu/"
+      },
+      {
+        "type": "ansible-local",
+        "playbook_file": "./packer/provisioners/ansible/playbooks/setup-app.yml",
+        "role_paths": [
+          "./packer/provisioners/ansible/roles/installconfig",
+          "./packer/provisioners/ansible/roles/disableipv6",
+          "./packer/provisioners/ansible/roles/setupapp"
+        ]
+      },
+      {
+        "type": "shell",
+        "script": "./packer/provisioners/scripts/cleanup.sh"
+      }
+    ]
+}
